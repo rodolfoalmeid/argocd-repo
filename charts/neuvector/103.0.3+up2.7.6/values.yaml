@@ -39,7 +39,7 @@ controller:
     repository: rancher/mirrored-neuvector-controller
     tag: 5.3.2
     hash:
-  replicas: 3
+  replicas: 1
   disruptionbudget: 0
   schedulerName:
   priorityClassName:
@@ -458,7 +458,7 @@ cve:
     runAsUser: # MUST be set for Rancher hardened cluster
   scanner:
     enabled: true
-    replicas: 3
+    replicas: 2
     dockerPath: ""
     strategy:
       type: RollingUpdate
