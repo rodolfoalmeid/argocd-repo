@@ -11,7 +11,7 @@ imagePullSecrets:
 psp: false
 rbac: true # required for rancher authentication
 serviceAccount: default
-leastPrivilege: true
+leastPrivilege: false
 global: # required for rancher authentication (https://<Rancher_URL>/)
   cattle:
     url:
@@ -27,26 +27,22 @@ global: # required for rancher authentication (https://<Rancher_URL>/)
     imagePullSecrets:
     images:
       neuvector_csp_pod:
-        digest: ""
+        tag: latest
         image: neuvector-billing-azure-by-suse-llc
-        registry: susellcforazuremarketplace.azurecr.io
+        registry: registry.suse.de/suse/sle-15-sp5/update/pubclouds/images
         imagePullPolicy: IfNotPresent
       controller:
-        digest: ""
-        image: neuvector/controller
-        registry: docker.io
+        tag: 5.2.4
+        image: controller
+        registry: docker.io/neuvector
       manager:
-        digest: ""
-        image: neuvector/manager
-        registry: docker.io
-      scanner:
-        digest: ""
-        image: neuvector/scanner
-        registry: docker.io
+        tag: 5.2.4
+        image: manager
+        registry: docker.io/neuvector
       enforcer:
-        digest: ""
-        image: neuvector/enforcer
-        registry: docker.io
+        tag: 5.2.4
+        image: enforcer
+        registry: docker.io/neuvector
 
   aws:
     enabled: false
@@ -82,7 +78,7 @@ controller:
   image:
     repository: neuvector/controller
     hash:
-  replicas: 1
+  replicas: 3
   disruptionbudget: 0
   schedulerName:
   priorityClassName:
@@ -129,7 +125,7 @@ controller:
         #  -----BEGIN PRIVATE KEY-----
         #  -----END PRIVATE KEY-----
   ranchersso: # required for rancher authentication
-    enabled: true
+    enabled: false
   pvc:
     enabled: false
     existingClaim: false
@@ -239,12 +235,13 @@ controller:
     tls: false
     secretName:
   resources:
-     limits:
-       cpu: 600m
-       memory: 1500Mi
-     requests:
-       cpu: 100m
-       memory: 1000Mi
+    {}
+    # limits:
+    #   cpu: 400m
+    #   memory: 2792Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 2280Mi
   configmap:
     enabled: false
     data:
@@ -304,12 +301,13 @@ enforcer:
     - effect: NoSchedule
       key: node-role.kubernetes.io/control-plane
   resources:
-     limits:
-       cpu: 400m
-       memory: 1000Mi
-     requests:
-       cpu: 100m
-       memory: 600Mi
+    {}
+    # limits:
+    #   cpu: 400m
+    #   memory: 2792Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 2280Mi
   internal: # this is used for internal communication. Please use the SAME CA for all the components (controller, scanner, adapter and enforcer)
     certificate:
       secret: "" 
@@ -377,12 +375,13 @@ manager:
     tls: false
     secretName: # my-tls-secret
   resources:
-     limits:
-       cpu: 400m
-       memory: 2792Mi
-     requests:
-       cpu: 100m
-       memory: 2280Mi
+    {}
+    # limits:
+    #   cpu: 400m
+    #   memory: 2792Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 2280Mi
   affinity: {}
   podLabels: {}
   podAnnotations: {}
@@ -487,6 +486,14 @@ cve:
       hash:
     schedule: "0 0 * * *"
     priorityClassName:
+    resources:
+      {}
+      # limits:
+      #   cpu: 100m
+      #   memory: 256Mi
+      # requests:
+      #   cpu: 100m
+      #   memory: 256Mi
     podLabels: {}
     podAnnotations: {}
     nodeSelector:
@@ -496,7 +503,7 @@ cve:
     runAsUser: # MUST be set for Rancher hardened cluster
   scanner:
     enabled: true
-    replicas: 2
+    replicas: 3
     dockerPath: ""
     strategy:
       type: RollingUpdate
@@ -510,12 +517,13 @@ cve:
       hash:
     priorityClassName:
     resources:
-       limits:
-         cpu: 400m
-         memory: 1500Mi
-       requests:
-         cpu: 100m
-         memory: 1000Mi
+      {}
+      # limits:
+      #   cpu: 400m
+      #   memory: 2792Mi
+      # requests:
+      #   cpu: 100m
+      #   memory: 2280Mi
     affinity: {}
     podLabels: {}
     podAnnotations: {}
@@ -558,7 +566,7 @@ bottlerocket:
   runtimePath: /run/dockershim.sock
 
 containerd:
-  enabled: true
+  enabled: false
   path: /var/run/containerd/containerd.sock
 
 crio:
@@ -571,4 +579,3 @@ admissionwebhook:
 crdwebhook:
   enabled: true
   type: ClusterIP
-
