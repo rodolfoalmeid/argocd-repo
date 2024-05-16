@@ -1,0 +1,12 @@
+apiVersion: neuvector.com/v1
+items:
+- apiVersion: neuvector.com/v1
+  kind: NvComplianceProfile
+  metadata:
+    name: default
+  spec:
+    templates:
+      disable_system: false
+      entries: []
+kind: List
+metadata: null
